@@ -1,0 +1,4 @@
+#+TITLE: download HW files from blackboard system
+
+1. start with ~./download.py~, direct to download page in the pop up firefox windows, and press ~y~ to continue. some pdf file may not be saved automately, you should check the `save for all` box manually.
+2. add ID to folder name with ~./addID.py~, a (only one) ~.xlsx~ file is needed to get correspond name -> ID map.
