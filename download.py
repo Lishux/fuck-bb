@@ -6,19 +6,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import time, pickle, os
-from datetime import date
+import time, pathlib, os
 
 curDir = os.getcwd()
 mimeTypeFile = curDir + "/mimeTypes"
 
 # ~dlDir~ specific firefox auto download file path
 # ensure ~dlDir~ is empty, download file will be first saved in ~dlDir~ then
-# moved to ~HWDir/$studentName~
+# moved to ~HWDir/$Name~
 dlDir = curDir + "/Downloads"
-os.system("[[ -d " + dlDir + " ]] || mkdir -p " + dlDir)
 HWDir = curDir + "/HW/"
-os.system("[[ -d " + HWDir + " ]] || mkdir -p " + HWDir)
+
+# mkdir if not exist
+# https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory
+pathlib.Path(dlDir).mkdir(parents=True, exist_ok=True)
+pathlib.Path(HWDir).mkdir(parents=True, exist_ok=True)
 
 def yes_or_no(question):
     while "the answer is invalid":
@@ -30,28 +32,32 @@ def yes_or_no(question):
         else:
             print('Invalid Input')
 
-# load all mimeType, some pdf would still not recoginzed, user should manually
+# load all mimeType, some pdf may still not recoginzed, user should manually
 # click the ~save for all~ checkin box.
 mimeType = []
 with open(mimeTypeFile) as mt:
     for line in mt:
         mimeType.append(line.strip())
 
+# config auto download in firefox
 fp = webdriver.FirefoxProfile()
-
 fp.set_preference("browser.download.folderList",2)
 fp.set_preference("browser.download.manager.showWhenStarting",False)
 fp.set_preference("browser.download.dir", dlDir)
 fp.set_preference("browser.helperApps.alwaysAsk.force", False)
 fp.set_preference("browser.helperApps.neverAsk.saveToDisk", ','.join(mimeType))
 
+# wait for user direct to download page
 browser = webdriver.Firefox(firefox_profile=fp)
 if not yes_or_no('Direct to download webpage in the opened firefox windows, done?'):
     exit()
 
+
+# download
 wait = WebDriverWait(browser, 2)
-flag = True
+flag = True # download flag
 while flag:
+    start_time = time.time()
     cnt = len(browser.find_elements_by_class_name('gradeAttempt'))
     print(cnt, " entries found in this webpage\n")
     emptyCnt = 0
@@ -62,7 +68,7 @@ while flag:
         try:
             wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "dwnldBtn")))
         except:
-            print("!! Cannot find a file to download")
+            print("\n!! Cannot find a file to download\n")
             emptyCnt += 1
             continue
         files = browser.find_elements_by_class_name("dwnldBtn")
@@ -71,10 +77,11 @@ while flag:
         while len(os.listdir(dlDir)) < len(files) or any([fn.endswith(".part") for fn in os.listdir(dlDir)]):
             time.sleep(0.5)
         newdir = HWDir + name
-        os.system("[[ -d " + newdir + " ]] || mkdir -p " + newdir)
+        pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
         os.system("mv " + dlDir + "/* " + newdir)
         browser.back()
         print(i, name, sep='\t')
     print("\n", cnt-emptyCnt, " success, ", emptyCnt, " fail")
-    flag = yes_or_no("redownloaded?")
+    print("--- %s minutes cost ---" % int((time.time() - start_time)/60))
+    flag = yes_or_no("In some case you may lose some files, if it is you can redownload them. Redownload?")
 browser.quit()
