@@ -1,4 +1,21 @@
-#+TITLE: download HW files from blackboard system
+#+TITLE: Download HW files from blackboard system
 
-1. start with ~./download.py~, direct to download page in the pop up firefox windows, and press ~y~ to continue. some pdf file may not be saved automately, you should check the `save for all` box manually.
-2. add ID to folder name with ~./addID.py~, a (only one) ~.xlsx~ file is needed to get correspond name -> ID map.
+* Requirement
+- ~firefox~ browser, and ~firefox-geockdriver~
+  In Ubuntu
+  #+begin_src shell
+  sudo apt install firefox-geockdriver
+  #+end_src
+  In Arch Linux
+  #+begin_src shell
+  sudo pacman -S geockdriver
+  #+end_src
+
+- python package
+  #+begin_src shell
+  python3 -m pip install selenium pandas openpyxl
+  #+end_src
+
+* Usage
+- start with ~./download.py~, direct to download page in the pop up firefox windows, and press ~y~ to continue. some pdf file may not be saved automately, you should check the `save for all` box manually.
+- attach ID to folder name with ~./addID.py~, need a (only one) ~.xlsx~ file to get correspond name -> ID map. (look at the ~skiprows~ option in ~addID.py~ if it have trouble read in ~xlsx~ file correctly)

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 import os
+import pandas as pd
+
 curDir = os.getcwd()
 for f in os.listdir(curDir):
     if f.endswith(".xlsx"):
         nameIDFile = f
         break
 
-import pandas as pd
+# change skiprows to ~$(row index of '姓名') - 1~
 data = pd.read_excel(nameIDFile, engine="openpyxl", index_col=0, skiprows=5)[{'姓名','学号'}].dropna()
 nameID = {}
 for i in range(len(data)):
