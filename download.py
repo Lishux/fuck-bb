@@ -44,8 +44,12 @@ fp = webdriver.FirefoxProfile()
 fp.set_preference("browser.download.folderList",2)
 fp.set_preference("browser.download.manager.showWhenStarting",False)
 fp.set_preference("browser.download.dir", dlDir)
-fp.set_preference("browser.helperApps.alwaysAsk.force", False)
+
+# auto download all mimetype without confirm, include .pdf
+# https://stackoverflow.com/questions/36309314/set-firefox-profile-to-download-files-automatically-using-selenium-and-java?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+# fp.set_preference("browser.helperApps.alwaysAsk.force", False)
 fp.set_preference("browser.helperApps.neverAsk.saveToDisk", ','.join(mimeType))
+fp.set_preference("pdfjs.disabled", True);
 
 # wait for user direct to download page
 browser = webdriver.Firefox(firefox_profile=fp)

@@ -2,11 +2,11 @@
 
 * Requirement
 - ~firefox~ browser, and ~firefox-geockdriver~
-  In Ubuntu
+  On Ubuntu
   #+begin_src shell
   sudo apt install firefox-geockdriver
   #+end_src
-  In Arch Linux
+  On Arch Linux
   #+begin_src shell
   sudo pacman -S geockdriver
   #+end_src
@@ -17,5 +17,5 @@
   #+end_src
 
 * Usage
-- start with ~./download.py~, direct to download page in the pop up firefox windows, and press ~y~ to continue. some pdf file may not be saved automately, you should check the `save for all` box manually.
+- start with ~./download.py~, direct to download page in the pop up firefox windows, and press ~y~ to continue.
 - attach ID to folder name with ~./addID.py~, need a (only one) ~.xlsx~ file to get correspond name -> ID map. (look at the ~skiprows~ option in ~addID.py~ if it have trouble read in ~xlsx~ file correctly)
