@@ -16,6 +16,7 @@ mimeTypeFile = curDir + "/mimeTypes"
 # moved to ~HWDir/$Name~
 dlDir = curDir + "/Downloads"
 HWDir = curDir + "/HW/"
+bbUrl = "https://www.bb.ustc.edu.cn"
 
 # mkdir if not exist
 # https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory
@@ -53,6 +54,7 @@ fp.set_preference("pdfjs.disabled", True);
 
 # wait for user direct to download page
 browser = webdriver.Firefox(firefox_profile=fp)
+browser.get(bbUrl)
 if not yes_or_no('Direct to download webpage in the opened firefox windows, done?'):
     exit()
 
