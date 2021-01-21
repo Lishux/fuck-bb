@@ -70,11 +70,13 @@ while flag:
     for i in range(cnt):
         entry = browser.find_elements_by_class_name('gradeAttempt')[i]
         name = entry.text.split(" ")[0]
+        print(i, name, sep='\t')
         entry.click()
         try:
             wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "dwnldBtn")))
         except:
             print("\n!! Cannot find a file to download\n")
+            browser.back()
             emptyCnt += 1
             continue
         files = browser.find_elements_by_class_name("dwnldBtn")
@@ -86,7 +88,6 @@ while flag:
         pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
         os.system("mv " + dlDir + "/* " + newdir)
         browser.back()
-        print(i, name, sep='\t')
     print("\n", cnt-emptyCnt, " success, ", emptyCnt, " fail")
     print("--- %s minutes cost ---" % int((time.time() - start_time)/60))
     flag = yes_or_no("In some case you may lose some files, if it is you can redownload them. Redownload?")
